@@ -102,18 +102,19 @@ def valid_expression(tokens):
         return False
   return True
 
-# Separate user input into numbers and symbols
-match = re.findall('\d+|\D+', expression)
-tokens = []
-# Convert all numbers to string 'n'
-for item in match:
-  if item.isdigit():
-    tokens.append('n')
-  else:
-    tokens.extend(list(item))
 
 # Main function
 if __name__ == '__main__':
+
+  # Separate user input into numbers and symbols
+  match = re.findall('\d+|\D+', expression)
+  tokens = []
+  # Convert all numbers to string 'n'
+  for item in match:
+    if item.isdigit():
+      tokens.append('n')
+    else:
+      tokens.extend(list(item))
 
   if valid_expression(tokens):
     print 'Yes'
