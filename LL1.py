@@ -1,3 +1,14 @@
+#####
+###
+# Author: Matt Price
+# Ilstu ID: 830083370
+# Copyright: Matt Price
+#
+# HOWTO: 
+# You can run the program using the command line by typing `python /path/to/LL1.py -e "100-((2*(5-3))-2)+3"`.
+###
+#####
+
 import argparse
 import re
 
