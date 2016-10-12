@@ -5,7 +5,7 @@
 # Copyright: Matt Price
 #
 # HOWTO: 
-# You can run the program using the command line by typing `python /path/to/LL1.py -e "100-((2*(5-3))-2)+3"`.
+# You can run the program using the command line by typing `python /path/to/LL2.py -e "100-((2*(5-3))-2)+3"`.
 ###
 #####
 
@@ -13,16 +13,10 @@ import argparse
 import csv
 import re
 
-# Get expression from user via CLI
-parser = argparse.ArgumentParser(description='Arguments for the program')
-parser.add_argument('-e', required=True, help='The expression to parse')
-args = parser.parse_args()
-
-expression = args.e
-
-def load_parsing_table():
+# Load a parsing table from a .csv file. Defaults to "table.csv"
+def load_parsing_table(table_file='table.csv'):
   table = {}
-  with open('table.csv', 'rU') as csvfile:
+  with open(table_file, 'rU') as csvfile:
     reader = csv.reader(csvfile, delimiter = ',')
     for row in reader:
       n = row[0]
@@ -53,6 +47,7 @@ def load_parsing_table():
 
   return table
 
+# Print the current stack along with the remaining tokens
 def print_status(stack, tokens):
   s = ''
   for item in stack:
@@ -63,8 +58,7 @@ def print_status(stack, tokens):
   print s
 
 # The main logic
-def valid_expression(tokens):
-  table = load_parsing_table()
+def valid_expression(tokens, table):
 
   stack = []
   stack.append(('-', '0'))
@@ -107,7 +101,7 @@ def valid_expression(tokens):
       if not valid_red:
         # Invalid reduction attempt
         return False
-        
+
     # Accept 
     else:
       return True
@@ -121,6 +115,14 @@ def valid_expression(tokens):
 # Main function
 if __name__ == '__main__':
 
+  # Get expression from user via CLI
+  parser = argparse.ArgumentParser(description='Arguments for the program')
+  parser.add_argument('-e', required=True, help='The expression to parse')
+  parser.add_argument('-f', help='Optional - the file to load a parsing table from.')
+  args = parser.parse_args()
+
+  expression = args.e
+
   # Separate user input into numbers and symbols
   match = re.findall('\d+|\D+', expression)
   tokens = []
@@ -131,10 +133,17 @@ if __name__ == '__main__':
     else:
       tokens.extend(list(item))
 
+  # Load the parsing table
+  if args.f:
+    # user specified a specific file for a table
+    table = load_parsing_table(args.f)
+  else:
+    table = load_parsing_table()
+
   if tokens and tokens[len(tokens)-1] != '$':
     tokens.append('$')
 
-  if valid_expression(tokens):
+  if valid_expression(tokens, table):
     print 'Yes'
   else:
     print 'No'
