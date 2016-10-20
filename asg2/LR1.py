@@ -5,7 +5,7 @@
 # Copyright: Matt Price
 #
 # HOWTO: 
-# You can run the program using the command line by typing `python /path/to/LL2.py -e "100-((2*(5-3))-2)+3"`.
+# You can run the program using the command line by typing `python /path/to/LR1.py -e "100-((2*(5-3))-2)+3"`.
 ###
 #####
 
