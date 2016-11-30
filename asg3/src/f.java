@@ -4,9 +4,6 @@ import java.util.Map;
 /**
 * Program that mimics the rough concept of what activation records do.
 *
-* Replaced "Previous Activation Record" field with hard copies of the 
-* previous activation record's values. 
-*
 * Ignored "Return Address"
 * 
 * @author Matt Price
@@ -15,32 +12,30 @@ import java.util.Map;
 public class f {
 
   // Represents `fun g` from ML example
-  private int g(Map<String, Integer> prevRecord, int n) {
+  private int g(Map<String, Object> prevRecord, int n) {
     if (n == 0) {
       // base case
       return 0;
     }
-    int a = prevRecord.get("x") + prevRecord.get("y");
+    int a = (int)(prevRecord.get("x")) + (int)(prevRecord.get("y"));
 
     // Create record for this activation
-    Map<String, Integer> record = new HashMap<String, Integer>() {{
+    Map<String, Object> record = new HashMap<String, Object>() {{
       put("a", a);
       put("n", n);
-      put("x", prevRecord.get("x"));
-      put("y", prevRecord.get("y"));
+      put("nestingLink", prevRecord);
     }};
-
     return this.h(record, n-1);
   }
 
   // Represents `fun h` from ML example
-  private int h(Map<String, Integer> prevRecord, int k) {
+  @SuppressWarnings("unchecked")
+  private int h(Map<String, Object> prevRecord, int k) {
     if (k == 0) {
       // base case
       return 0;
     }
-
-    return prevRecord.get("a") + prevRecord.get("n") + this.g(prevRecord, prevRecord.get("n")-1);
+    return (int)(prevRecord.get("a")) + (int)(prevRecord.get("n")) + this.g((Map<String, Object>)(prevRecord.get("nestingLink")), (int)(prevRecord.get("n"))-1);
   }
 
   // The main function to run computations
@@ -49,7 +44,7 @@ public class f {
     int a = x+1;
 
     // Create record for this activation
-    Map<String, Integer> record = new HashMap<String, Integer>() {{
+    Map<String, Object> record = new HashMap<String, Object>() {{
       put("a", a);
       put("x", x);
       put("y", y);
@@ -59,7 +54,6 @@ public class f {
       // base case
       return this.g(record, y);
     }
-
     return a + this.g(record, this.compute(x-1, y));
   }
 
@@ -69,20 +63,11 @@ public class f {
       System.out.println("Usage: `java f <int> <int>`");
       return;
     }
-
     int x = Integer.parseInt(args[0]);
     int y = Integer.parseInt(args[1]);
 
     f fObj = new f();
-    for (int i = 0; i < 2; i++) {
-      for (int j = 10; j < 21; j++) {
-        int val = fObj.compute(i, j);
-        System.out.println("f(" + i + ", " + j + ")=" + val);
-      }
-    }
-    
     int val = fObj.compute(x, y);
     System.out.println("f(" + x + ", " + y + ")=" + val);
-
   }
 }
