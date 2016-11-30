@@ -1,9 +1,4 @@
-/**
-  * Created by user on 11/29/16.
-  */
 package src
-
-// import src.Point
 
 object test {
   def main(args: Array[String]) {
