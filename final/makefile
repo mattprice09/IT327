@@ -4,4 +4,4 @@ build:
 
 run:
 	make build
-	scala -cp . src.test
+	scala -cp . src.Main
